@@ -6,7 +6,7 @@
 #include <cmath>
 
 namespace entropy_analiser{
-    FirstOrderEntropyAnaliser::FirstOrderEntropyAnaliser(): entropy(0) , nOfBytes(0){
+    FirstOrderEntropyAnaliser::FirstOrderEntropyAnaliser(): entropy(0){
 
     }
 
@@ -21,30 +21,21 @@ namespace entropy_analiser{
     }
 
     void FirstOrderEntropyAnaliser::resetFrequencyValues() {
-        nOfBytes=0;
-        for(int i = 0; i < utils::SIZE_OF_BYTES; i++){
-            frequencyValues[i] = 0;
-        }
+        dataFrequency.reset();
     }
 
     void FirstOrderEntropyAnaliser::loadFrequencyValues(std::istream &is) {
-        utils::byte currentByte;
-        while(is >> currentByte){
-            if(currentByte != ' '){
-                frequencyValues[currentByte]++;
-                nOfBytes++;
-            }
-        }
+        dataFrequency.setFrequencyVector(is);
     }
 
     void FirstOrderEntropyAnaliser::setEntropyValue() {
-        if(nOfBytes==0){
+        if(dataFrequency.getNOfBytes()==0){
             entropy = 0;
             return;
         }
         for(int i = 0; i < utils::SIZE_OF_BYTES; i++){
-            if(frequencyValues[i] != 0){
-                double probability = ((double)frequencyValues[i])/nOfBytes;
+            if(dataFrequency.getFrequencyVector()[i] != 0){
+                double probability = ((double)dataFrequency.getFrequencyVector()[i])/dataFrequency.getNOfBytes();
                 entropy -= probability*log2(probability);
             }
         }

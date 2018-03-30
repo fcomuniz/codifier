@@ -1,5 +1,6 @@
 add_library(analisador_de_entropia_lib FirstOrderEntropyAnaliser.cpp FirstOrderEntropyAnaliser.h)
 add_executable(analisador_de_entropia analisador_de_entropia.cpp)
+target_link_libraries(analisador_de_entropia_lib utils_lib)
 target_link_libraries(analisador_de_entropia analisador_de_entropia_lib)
 
 file(GLOB_RECURSE input_files *.txt)

@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <utils/DataTypes.h>
+#include <utils/DataFrequency.h>
 
 namespace entropy_analiser{
 
@@ -22,8 +23,8 @@ namespace entropy_analiser{
         void loadFrequencyValues(std::istream & os);
         void setEntropyValue();
         double entropy;
-        int nOfBytes;
-        unsigned int frequencyValues[utils::SIZE_OF_BYTES];
+        utils::DataFrequency dataFrequency;
+
 
     };
 
