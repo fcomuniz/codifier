@@ -19,6 +19,7 @@ namespace utils{
         void reset();
     private:
         std::vector<unsigned int> frequencyVector;
+        std::vector<double> acummulatedProbabilityVector;
         size_t nOfBytes;
     };
 

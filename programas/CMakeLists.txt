@@ -1,5 +1,5 @@
 include_directories(.)
 add_subdirectory(utils)
-add_subdirectory(analisador_de_entropia)
-add_subdirectory(compressor_aritmetico)
-add_subdirectory(decompressor)
+add_subdirectory(entropy_analiser)
+add_subdirectory(arithmetic_compressor)
+add_subdirectory(arithmetic_decompressor)
