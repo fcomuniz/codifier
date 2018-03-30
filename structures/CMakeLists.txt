@@ -1,21 +1,7 @@
-
-include_directories(${source_dir}/googlemock/include)
-set(UNIT_TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/UnitTestExec.cpp)
 file(GLOB_RECURSE SRCS *.cpp)
-file(GLOB_RECURSE TEST_SRCS *test.cpp)
-list(REMOVE_ITEM SRCS ${UNIT_TEST_EXEC} ${TEST_SRCS})
+#list(REMOVE_ITEM SRCS ${UNIT_TEST_EXEC} ${TEST_SRCS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if(NOT ${SRCS})
 	add_library(structures ${SRCS})
-endif()
-
-foreach(test ${TEST_SRCS})
-  get_filename_component(filename_we ${test} NAME_WE)
-  add_executable(${filename_we} ${test} ${UNIT_TEST_EXEC})
-  target_link_libraries(${filename_we} libgtest libgmock)
-endforeach()
-if(NOT TEST_SRCS)
-	add_executable(all_tests ${TEST_SRCS} ${UNIT_TEST_EXEC})
-	target_link_libraries(all_tests libgtest libgmock)
 endif()

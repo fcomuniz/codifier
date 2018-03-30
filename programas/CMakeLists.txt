@@ -1,3 +1,5 @@
+include_directories(.)
+add_subdirectory(utils)
 add_subdirectory(analisador_de_entropia)
 add_subdirectory(compressor_aritmetico)
 add_subdirectory(decompressor)

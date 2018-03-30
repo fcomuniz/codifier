@@ -20,6 +20,7 @@ include_directories(${EIGEN3_INCLUDE_DIRS})
 
 #adding programs
 add_subdirectory(programas)
+include_directories(programas)
 add_subdirectory(tests)
 
 

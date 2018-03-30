@@ -46,16 +46,18 @@ foreach(f ${SRCS})
     get_filename_component(f_we ${f} NAME_WE)
     get_filename_component(dir ${f} DIRECTORY)
     set(INPUT_NAME ${f_we}.txt)
-    add_executable(${f_we} ${f})
-    target_link_libraries(${f_we})
+    add_executable(${f_we} ${f} AllTests.cpp)
+    add_test(NAME ${f_we} COMMAND ${f_we})
+    target_link_libraries(${f_we} analisador_de_entropia_lib libgtest libgmock)
 
     file(GLOB_RECURSE TXTS ${dir}/*.txt)
     foreach(TXT ${TXTS})
+        get_filename_component(txt_name ${TXT} NAME)
         add_custom_command(
                 TARGET ${f_we} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                COMMAND ${CMAKE_COMMAND} -E create_symlink
                 ${TXT}
-                $<TARGET_FILE_DIR:${f_we}>
+                $<TARGET_FILE_DIR:${f_we}>/${txt_name}
         )
 
     endforeach()
