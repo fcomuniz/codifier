@@ -1,0 +1,3 @@
+add_subdirectory(analisador_de_entropia)
+add_subdirectory(compressor_aritmetico)
+add_subdirectory(decompressor)
