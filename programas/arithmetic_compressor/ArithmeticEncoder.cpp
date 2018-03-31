@@ -7,41 +7,46 @@
 #include "structures/MyBitManipulation.h"
 namespace arithmetic_compressor{
 
-void ArithmeticEncoder::encode(std::istream &is) {
-    freq.setFrequencyVector(is);
+void ArithmeticEncoder::encode(std::istream &is, const utils::DataFrequency &freq) {
     messageSize.calculateMessageSize(freq);
-    initilizeValues();
-    is.clear();
-    is.seekg(0,std::ios_base::beg);
+    initilizeValues(freq);
     utils::byte symbol;
     int acuCountBefore;
+    int scale3 =0;
     while(is>>symbol){
         if(symbol == 0){
             acuCountBefore=0;
         } else {
             acuCountBefore = freq.getAcummulatedFrequency()[symbol-1];
         }
-        l = l +floor(((u-l+1)*acuCountBefore)/freq.getNOfBytes());
-        u = l + floor(((u-l+1)*freq.getAcummulatedFrequency()[symbol])/freq.getNOfBytes());
+        int prevU = u;
+        int prevL = l;
+
+        l = prevL + ((prevU-prevL+1)*acuCountBefore)/freq.getNOfBytes();
+        u = prevL + ((prevU-prevL+1)*freq.getAcummulatedFrequency()[symbol])/freq.getNOfBytes() -1;
         int msbPos = m-1;
         bool cond1 = !(getBit(l,msbPos) ^ getBit(u,msbPos));
         bool cond2 = (getBit(u,msbPos-1)== 0 && getBit(l,msbPos-1)==1);
-        int scale3=0;
         while(cond1 || cond2){
             if(cond1){
+                bool bit = getBit(l,msbPos);
                  encodedMessage << getBit(l,msbPos);
                 l = (l<<1);
+                l = clearBit(l,msbPos+1);
                 u = (u<<1) | 1;
+                u = clearBit(u,msbPos+1);
                 while(scale3>0){
-                    encodedMessage << !getBit(l,msbPos);
+                    encodedMessage << !bit;
                     scale3--;
                 }
             }
             if(cond2){
+                l =flipBit(l,msbPos-1);
                 l = l<<1;
+                l = clearBit(l,msbPos+1);
+                u = flipBit(u,msbPos-1);
                 u = (u<<1)|1;
-                flipBit(l,msbPos);
-                flipBit(u,msbPos);
+                u = clearBit(u,msbPos+1);
                 scale3++;
             }
            cond1 = !(getBit(l,msbPos) ^ getBit(u,msbPos));
@@ -51,8 +56,8 @@ void ArithmeticEncoder::encode(std::istream &is) {
 
 }
 
-void ArithmeticEncoder::initilizeValues() {
-    m = 8;
+void ArithmeticEncoder::initilizeValues(const utils::DataFrequency & freq) {
+    m = 2+ceil(log2(freq.getNOfBytes()));
     l = 0;
     u = (1<<m)-1;
 
@@ -61,4 +66,6 @@ void ArithmeticEncoder::initilizeValues() {
 std::string ArithmeticEncoder::getEncodedMessage() {
     return encodedMessage.str();
 }
+
+
 }

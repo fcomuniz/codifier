@@ -59,5 +59,13 @@ void DataFrequency::setAcummulatedFrequency() {
         acummulatedFrequency[i] = acummulatedFrequency[i-1] + frequencyVector[i];
     }
 }
+
+void DataFrequency::setFrequencyVector(const std::vector<unsigned int> & freq) {
+    frequencyVector = freq;
+    for(int i = 0, n = frequencyVector.size(); i < n; i++){
+        nOfBytes += frequencyVector[i];
+    }
+    setAcummulatedFrequency();
+}
 }
 

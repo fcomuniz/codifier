@@ -15,6 +15,7 @@ namespace utils{
         DataFrequency();
         void setFrequencyVector(std::istream & is);
         void setFrequencyVector(const std::vector<utils::byte> & bytes);
+        void setFrequencyVector(const std::vector<unsigned int> & freqV);
         const std::vector<unsigned int> & getFrequencyVector() const ;
         const std::vector<unsigned int> & getAcummulatedFrequency()const ;
         const size_t getNOfBytes() const;
