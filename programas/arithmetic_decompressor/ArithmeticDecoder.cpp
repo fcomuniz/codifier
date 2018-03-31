@@ -3,6 +3,7 @@
 //
 
 #include <structures/MyBitManipulation.h>
+#include <bitset>
 #include "ArithmeticDecoder.h"
 
 namespace arithmetic_decompressor{
@@ -16,8 +17,9 @@ int arithmetic_decompressor::ArithmeticDecoder::readBits(std::istream & is, int 
 
 bool ArithmeticDecoder::readFromBuffer(std::istream &is) {
     if(bufferBitsRead == 8){
-        canRead = (bool)(is  >> buffer);
+        buffer = is.get();
         bufferBitsRead = 0;
+        canRead = !is.eof();
     }
     bool retBit = (buffer >> (8-bufferBitsRead-1)) & 1;
     bufferBitsRead++;
@@ -31,6 +33,7 @@ ArithmeticDecoder::decodeFromStreamToOutputStream(std::istream &is, std::ostream
     int readBytes = 0;
     t = readBits(is,m);
     while(canRead && readBytes <messageSize.getMessageSize()){
+        std::cout << std::bitset<8>(t) << " " << t << std::endl;
         utils::byte k = 0;
         while(((t-l+1)*freq.getNOfBytes() -1 )/(u-l+1) >= freq.getAcummulatedFrequency()[k])k++;
         os << k;

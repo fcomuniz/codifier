@@ -12,24 +12,21 @@ using namespace arithmetic_compressor;
 TEST(ArithmeticEncoder, simpleSequence){
     utils::DataFrequency freq;
     std::vector<unsigned int> freqVec(utils::SIZE_OF_BYTES,0);
-    freqVec['1']=40;
-    freqVec['2'] = 1;
-    freqVec['3'] = 9;
+    std::string toEncode("1333435");
+    for(auto & c : toEncode){
+        freqVec[(unsigned char)c]++;
+    }
     freq.setFrequencyVector(freqVec);
     ArithmeticEncoder encoder;
-    std::stringstream ss("1223334444");
-    freq.setFrequencyVector(ss);
-    ss.clear();
-    ss.seekg(0,std::ios_base::beg);
+    std::stringstream ss(toEncode);
+    //11001010 00000000
     encoder.encode(ss,freq);
     std::bitset<8*sizeof(utils::byte)> b;
     ss.clear();
     ss.str(encoder.getEncodedMessage());
-    std::cout << ss.str()<< std::endl;
-    utils::byte currentByte;
-    while(ss >> currentByte){
+    for(auto currentByte : encoder.getEncodedMessage()){
         b = std::bitset<8*sizeof(utils::byte)>(currentByte);
-        std::cout << b;
+        std::cout << b << " ";
     }
     std::cout << std::endl;
 }
