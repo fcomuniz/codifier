@@ -1,2 +1,2 @@
 include_directories(.)
-add_library(utils_lib DataFrequency.cpp DataFrequency.h MessageSize.cpp MessageSize.h)
+add_library(utils_lib DataFrequency.cpp DataFrequency.h MessageHeader.cpp MessageHeader.h)

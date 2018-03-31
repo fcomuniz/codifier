@@ -8,7 +8,7 @@
 #include <iostream>
 #include <utils/DataTypes.h>
 #include "utils/DataFrequency.h"
-#include "utils/MessageSize.h"
+#include "utils/MessageHeader.h"
 #include <sstream>
 #include <vector>
 
@@ -24,7 +24,7 @@ private:
     void sendInBuffer(std::ostream & os, bool bit);
     void sendIncompleteBuffer(std::ostream & os);
     std::stringstream encodedMessage;
-    utils::MessageSize messageSize;
+    utils::MessageHeader messageSize;
     utils::byte buffer;
     int bufferSize;
     int l, u, m;

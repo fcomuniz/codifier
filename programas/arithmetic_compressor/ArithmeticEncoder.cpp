@@ -13,7 +13,7 @@ void ArithmeticEncoder::encode(std::istream &is, const utils::DataFrequency &fre
 
 void ArithmeticEncoder::initilizeValues(const utils::DataFrequency & freq) {
     messageSize.calculateMessageSize(freq);
-    m = messageSize.getMessageSize();
+    m = messageSize.getMessageBytesSize();
     l = 0;
     u = (1<<m)-1;
 
@@ -90,7 +90,6 @@ ArithmeticEncoder::ArithmeticEncoder() {
 
 void ArithmeticEncoder::sendInBuffer(std::ostream &os, bool bit) {
     if(bufferSize == 8){
-        std::cout << "sending: " << (int)buffer << std::endl ;
         os << buffer;
         buffer=0;
         bufferSize=0;
@@ -101,7 +100,6 @@ void ArithmeticEncoder::sendInBuffer(std::ostream &os, bool bit) {
 
 void ArithmeticEncoder::sendIncompleteBuffer(std::ostream &os) {
     if(bufferSize != 0){
-        std::cout << "sending incomplete" << (buffer<<(8-bufferSize)) << std::endl;
         os << (utils::byte)(buffer<<(8-bufferSize));
     }
 }

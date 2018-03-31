@@ -40,6 +40,7 @@ set_target_properties(libgmock PROPERTIES
         "IMPORTED_LOCATION" "${binary_dir}/googlemock/libgmock.a"
         "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}")
 
+include_directories(.)
 file(GLOB_RECURSE SRCS *UnitTest.cpp)
 
 foreach(f ${SRCS})
@@ -48,7 +49,7 @@ foreach(f ${SRCS})
     set(INPUT_NAME ${f_we}.txt)
     add_executable(${f_we} ${f} AllTests.cpp)
     add_test(NAME ${f_we} COMMAND ${f_we})
-    target_link_libraries(${f_we} analisador_de_entropia_lib libgtest libgmock arithmetic_compressor_lib)
+    target_link_libraries(${f_we} analisador_de_entropia_lib libgtest libgmock arithmetic_compressor_lib arithmetic_decompressor_lib)
 
     file(GLOB_RECURSE TXTS ${dir}/*.txt)
     foreach(TXT ${TXTS})
