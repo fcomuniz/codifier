@@ -6,6 +6,7 @@
 #include "utils/MessageHeader.h"
 #include "ArithmeticDecoder.h"
 #include <fstream>
+#include <bitset>
 
 int main(int argc, char ** argv){
     if(argc < 3) {
@@ -17,6 +18,13 @@ int main(int argc, char ** argv){
     utils::DataFrequency freq;
     utils::MessageHeader header;
     inputFile >> freq >> header;
+    auto pos = inputFile.tellg();
+    //00000010 11101110 11010010
+   // while(!inputFile.eof()){
+   //     std::cout << std::bitset<8>(b) << " ";
+  //      b = inputFile.get();
+ //   }
+//    inputFile.seekg(pos);
     arithmetic_decompressor::ArithmeticDecoder decoder;
     decoder.decodeFromStreamToOutputStream(inputFile,of,freq,header);
     return 0;

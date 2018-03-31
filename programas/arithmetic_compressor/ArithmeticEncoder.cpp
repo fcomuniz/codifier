@@ -50,13 +50,13 @@ void ArithmeticEncoder::encodeAndSend(std::istream &is, std::ostream &os, const 
     }
     for(int i = 1; i <= m; i++){
         sendInBuffer(os,getBit(l,m-i));
-        if(scale3 > 0){
+        if(scale3){
             sendInBuffer(os,true);
             scale3--;
         }
     }
-    while(bufferSize != 0){
-        sendInBuffer(os,false);
+    while(bufferSize < 0){
+
     }
 }
 
@@ -111,16 +111,16 @@ bool ArithmeticEncoder::hasE3Condition(int l, int u) {
 
 void ArithmeticEncoder::shiftU(bool withflip) {
     u = (u<<1)|1;
-    u = clearBit(u,msb+1);
     if(withflip)
         u = flipBit(u,msb);
+    u = clearBit(u,msb+1);
 }
 
 void ArithmeticEncoder::shiftL(bool withFlip) {
     l = l<<1;
-    l = clearBit(l,msb+1);
     if(withFlip)
         l =flipBit(l,msb);
+    l = clearBit(l,msb+1);
 }
 
 

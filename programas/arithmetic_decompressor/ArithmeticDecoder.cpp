@@ -33,7 +33,7 @@ ArithmeticDecoder::decodeFromStreamToOutputStream(std::istream &is, std::ostream
     int readBytes = 0;
     t = readBits(is,m);
     while(canRead && readBytes <messageSize.getMessageSize()){
-        std::cout << std::bitset<8>(t) << " " << t << std::endl;
+        std::cout << std::bitset<32>(t) << " " << t << std::endl;
         utils::byte k = 0;
         while(((t-l+1)*freq.getNOfBytes() -1 )/(u-l+1) >= freq.getAcummulatedFrequency()[k])k++;
         os << k;
@@ -84,24 +84,23 @@ bool ArithmeticDecoder::getMSB(int l) {
 
 void ArithmeticDecoder::shiftL(bool withComplement) {
     l <<=1;
+    l = clearBit(l,msb+1);
     if(withComplement)
         complementMSB(l);
-    l = clearBit(l,msb+1);
 }
 
 void ArithmeticDecoder::shiftU(bool withComplement) {
     u = (u<<1) | 1;
+    u = clearBit(u,msb+1);
     if(withComplement)
         complementMSB(u);
-    u = clearBit(u,msb+1);
-
 }
 
 void ArithmeticDecoder::shiftT(std::istream & is, bool withComplement) {
     t = t<<1 | readBits(is,1);
+    t = clearBit(t,msb+1);
     if(withComplement)
         complementMSB(t);
-    t = clearBit(t,msb+1);
 }
 
 void ArithmeticDecoder::complementMSB(int & i) {

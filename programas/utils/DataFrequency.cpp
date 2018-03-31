@@ -77,7 +77,7 @@ std::istream &operator>>(std::istream & is, DataFrequency & d){
         int nOfThisByte;
         is >> nOfThisByte;
         d.frequencyVector[currentByte] = nOfThisByte;
-        d.nOfBytes++;
+        d.nOfBytes += nOfThisByte;
     }
     is.seekg(1,std::ios_base::cur);
     d.setAcummulatedFrequency();
