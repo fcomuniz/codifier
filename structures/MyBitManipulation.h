@@ -9,6 +9,10 @@ template<typename T>
 T setBit(T data, int i){
 	return data | (1<<i);
 }
+template<class T>
+T flipBit(T data, int i){
+    return data ^(1<<i);
+}
 
 template<typename T>
 T clearBit(T data, int i){
@@ -32,4 +36,16 @@ T updateBit(T num, int i, bool bitIs1){
 	int value = bitIs1 ? 1 : 0;
 	int mask = ~(1 <<i);
 	return (num & mask) | value << i;
+}
+
+template <class T>
+int MSBPos(T num){
+	int retPos = 0;
+    for(int i = 0; i < 8*sizeof(num); i++){
+		if((num>>i) & 1){
+			retPos = i;
+		}
+	}
+	return retPos;
+
 }

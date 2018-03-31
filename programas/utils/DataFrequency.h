@@ -14,11 +14,15 @@ namespace utils{
     public:
         DataFrequency();
         void setFrequencyVector(std::istream & is);
-        const std::vector<unsigned int> & getFrequencyVector();
-        const size_t getNOfBytes();
+        void setFrequencyVector(const std::vector<utils::byte> & bytes);
+        const std::vector<unsigned int> & getFrequencyVector() const ;
+        const std::vector<unsigned int> & getAcummulatedFrequency()const ;
+        const size_t getNOfBytes() const;
         void reset();
     private:
+        void setAcummulatedFrequency();
         std::vector<unsigned int> frequencyVector;
+        std::vector<unsigned int> acummulatedFrequency;
         std::vector<double> acummulatedProbabilityVector;
         size_t nOfBytes;
     };

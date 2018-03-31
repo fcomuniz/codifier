@@ -48,7 +48,7 @@ foreach(f ${SRCS})
     set(INPUT_NAME ${f_we}.txt)
     add_executable(${f_we} ${f} AllTests.cpp)
     add_test(NAME ${f_we} COMMAND ${f_we})
-    target_link_libraries(${f_we} analisador_de_entropia_lib libgtest libgmock)
+    target_link_libraries(${f_we} analisador_de_entropia_lib libgtest libgmock arithmetic_compressor_lib)
 
     file(GLOB_RECURSE TXTS ${dir}/*.txt)
     foreach(TXT ${TXTS})

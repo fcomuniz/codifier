@@ -12,6 +12,7 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 #adding structures
 add_subdirectory(structures)
+include_directories(structures)
 
 #adding eigen librar#Set static compilation for boost
 find_package(Boost REQUIRED COMPONENTS system filesystem program_options)
