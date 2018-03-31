@@ -8,6 +8,7 @@
 namespace utils{
 void MessageHeader::calculateMessageSize(const utils::DataFrequency &frequency) {
     messageBytesSize = 2+ceil(log2(frequency.getNOfBytes()));
+    messageSize = frequency.getNOfBytes();
 }
 
 int MessageHeader::getMessageBytesSize() const{
@@ -24,6 +25,7 @@ std::ostream & operator<<(std::ostream & os, const MessageHeader & messageSize){
 }
 std::istream & operator>>(std::istream & is, MessageHeader & messageSize){
     is >> messageSize.messageSize >> messageSize.messageBytesSize;
+    is.seekg(1,std::ios_base::cur);
     return is;
 }
 

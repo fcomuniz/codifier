@@ -56,11 +56,11 @@ void ArithmeticEncoder::encodeAndSend(std::istream &is, std::ostream &os, const 
                 }
             }
             if(cond2){
-                l =flipBit(l,msbPos-1);
                 l = l<<1;
+                l =flipBit(l,msbPos);
                 l = clearBit(l,msbPos+1);
-                u = flipBit(u,msbPos-1);
                 u = (u<<1)|1;
+                u = flipBit(u,msbPos);
                 u = clearBit(u,msbPos+1);
                 scale3++;
             }

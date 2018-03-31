@@ -8,6 +8,7 @@
 
 std::vector<unsigned int> getExampleFrequency(){
     std::vector<unsigned int> retValue(utils::SIZE_OF_BYTES, 0);
+    retValue['0'] = 9;
     retValue['1'] = 40;
     retValue['2'] = 1;
     retValue['3'] = 9;

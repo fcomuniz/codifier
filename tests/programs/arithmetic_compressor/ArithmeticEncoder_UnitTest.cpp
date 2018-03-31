@@ -17,7 +17,10 @@ TEST(ArithmeticEncoder, simpleSequence){
     freqVec['3'] = 9;
     freq.setFrequencyVector(freqVec);
     ArithmeticEncoder encoder;
-    std::stringstream ss("1321");
+    std::stringstream ss("1223334444");
+    freq.setFrequencyVector(ss);
+    ss.clear();
+    ss.seekg(0,std::ios_base::beg);
     encoder.encode(ss,freq);
     std::bitset<8*sizeof(utils::byte)> b;
     ss.clear();

@@ -77,8 +77,11 @@ std::istream &operator>>(std::istream & is, DataFrequency & d){
         int nOfThisByte;
         is >> nOfThisByte;
         d.frequencyVector[currentByte] = nOfThisByte;
+        d.nOfBytes++;
     }
+    is.seekg(1,std::ios_base::cur);
     d.setAcummulatedFrequency();
+    return is;
 }
 std::ostream &operator<<(std::ostream & os, const DataFrequency & d){
     int m = 0;

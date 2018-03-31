@@ -3,7 +3,7 @@ add_executable(arithmetic_compressor main.cpp)
 target_link_libraries(arithmetic_compressor_lib utils_lib analisador_de_entropia_lib)
 target_link_libraries(arithmetic_compressor arithmetic_compressor_lib)
 
-file(GLOB_RECURSE input_files *.txt)
+file(GLOB_RECURSE input_files *.dat)
 
 foreach(input_file ${input_files})
     get_filename_component(filename ${input_file} NAME)
