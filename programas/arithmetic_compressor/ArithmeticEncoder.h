@@ -16,7 +16,7 @@ namespace arithmetic_compressor{
 class ArithmeticEncoder {
 public:
     void encode(std::istream & is, const utils::DataFrequency & freq);
-    void encodeAndSend(std::istream & is, std::ostream & os);
+    void encodeAndSend(std::istream & is, std::ostream & os, const utils::DataFrequency & freq);
     std::string getEncodedMessage();
 private:
     void initilizeValues(const utils::DataFrequency & freq);

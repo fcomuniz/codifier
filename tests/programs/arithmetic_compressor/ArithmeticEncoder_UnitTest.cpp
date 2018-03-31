@@ -17,9 +17,7 @@ TEST(ArithmeticEncoder, simpleSequence){
     freq.setFrequencyVector(freqVec);
     ArithmeticEncoder encoder;
     std::stringstream ss("1321");
-
-    encoder.encode(ss,freq);
-    std::cout << encoder.getEncodedMessage() << std::endl;
+    encoder.encodeAndSend(ss,std::cout,freq);
 }
 
 

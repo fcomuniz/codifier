@@ -20,6 +20,10 @@ namespace utils{
         const std::vector<unsigned int> & getAcummulatedFrequency()const ;
         const size_t getNOfBytes() const;
         void reset();
+
+        friend std::istream &operator>>(std::istream & is, DataFrequency & d);
+        friend std::ostream &operator<<(std::ostream & os, const DataFrequency & d);
+
     private:
         void setAcummulatedFrequency();
         std::vector<unsigned int> frequencyVector;
@@ -27,6 +31,8 @@ namespace utils{
         std::vector<double> acummulatedProbabilityVector;
         size_t nOfBytes;
     };
+    std::istream &operator>>(std::istream & is, DataFrequency & d);
+    std::ostream &operator<<(std::ostream & os, const DataFrequency & d);
 
 }
 

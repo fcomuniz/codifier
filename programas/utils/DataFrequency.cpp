@@ -67,5 +67,33 @@ void DataFrequency::setFrequencyVector(const std::vector<unsigned int> & freq) {
     }
     setAcummulatedFrequency();
 }
+std::istream &operator>>(std::istream & is, DataFrequency & d){
+    int m;
+    is >> m;
+    d.reset();
+    while(m--){
+        utils::byte currentByte;
+        is >> currentByte;
+        int nOfThisByte;
+        is >> nOfThisByte;
+        d.frequencyVector[currentByte] = nOfThisByte;
+    }
+    d.setAcummulatedFrequency();
+}
+std::ostream &operator<<(std::ostream & os, const DataFrequency & d){
+    int m = 0;
+    for(auto & elem : d.frequencyVector){
+        if(elem != 0)
+            m++;
+    }
+    os << m;
+    int n;
+    n = d.frequencyVector.size();
+    utils::byte  i = 0;
+    do{
+        os << i << d.frequencyVector[i]<<std::endl;
+        i++;
+    } while(i != n-1);
+}
 }
 
