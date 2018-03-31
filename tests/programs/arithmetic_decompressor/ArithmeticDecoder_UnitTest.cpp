@@ -9,7 +9,7 @@
 #include "ArithmeticCompressorDataGenerator.h"
 
 TEST(ArithmeticDecoder, decodingTest){
-    std::string stringToDecompress = "1314334353";
+    std::string stringToDecompress = "1333435";
     std::stringstream ss(stringToDecompress);
     std::vector<unsigned int> freqV(utils::SIZE_OF_BYTES,0);
     for(auto c : stringToDecompress){
