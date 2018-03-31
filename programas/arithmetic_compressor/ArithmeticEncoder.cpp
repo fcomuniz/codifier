@@ -12,7 +12,8 @@ void ArithmeticEncoder::encode(std::istream &is, const utils::DataFrequency &fre
 }
 
 void ArithmeticEncoder::initilizeValues(const utils::DataFrequency & freq) {
-    m = 2+ceil(log2(freq.getNOfBytes()));
+    messageSize.calculateMessageSize(freq);
+    m = messageSize.getMessageSize();
     l = 0;
     u = (1<<m)-1;
 
@@ -23,7 +24,6 @@ std::string ArithmeticEncoder::getEncodedMessage() {
 }
 
 void ArithmeticEncoder::encodeAndSend(std::istream &is, std::ostream &os, const utils::DataFrequency &freq) {
-    messageSize.calculateMessageSize(freq);
     initilizeValues(freq);
     utils::byte symbol;
     int acuCountBefore;
@@ -45,13 +45,13 @@ void ArithmeticEncoder::encodeAndSend(std::istream &is, std::ostream &os, const 
         while(cond1 || cond2){
             if(cond1){
                 bool bit = getBit(l,msbPos);
-                os << getBit(l,msbPos);
+                sendInBuffer(os,bit);
                 l = (l<<1);
                 l = clearBit(l,msbPos+1);
                 u = (u<<1) | 1;
                 u = clearBit(u,msbPos+1);
                 while(scale3>0){
-                    os << !bit;
+                    sendInBuffer(os,!bit);
                     scale3--;
                 }
             }
@@ -69,13 +69,41 @@ void ArithmeticEncoder::encodeAndSend(std::istream &is, std::ostream &os, const 
         }
     }
     for(int i = 1; i <= m; i++){
-        os << getBit(l,m-i);
+        sendInBuffer(os,getBit(l,m-i));
         if(scale3){
-            os << '1';
+            sendInBuffer(os,true);
             scale3--;
         }
     }
+    sendIncompleteBuffer(os);
+}
 
+ArithmeticEncoder::ArithmeticEncoder() {
+    buffer=0;
+    bufferSize = 0;
+    l = 0;
+    m = 0;
+    u = 0;
+
+
+}
+
+void ArithmeticEncoder::sendInBuffer(std::ostream &os, bool bit) {
+    if(bufferSize == 8){
+        std::cout << "sending: " << (int)buffer << std::endl ;
+        os << buffer;
+        buffer=0;
+        bufferSize=0;
+    }
+    buffer = buffer<<1 | bit;
+    bufferSize++;
+}
+
+void ArithmeticEncoder::sendIncompleteBuffer(std::ostream &os) {
+    if(bufferSize != 0){
+        std::cout << "sending incomplete" << (buffer<<(8-bufferSize)) << std::endl;
+        os << (utils::byte)(buffer<<(8-bufferSize));
+    }
 }
 
 
