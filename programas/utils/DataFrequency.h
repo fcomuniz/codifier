@@ -23,6 +23,9 @@ namespace utils{
 
         friend std::istream &operator>>(std::istream & is, DataFrequency & d);
         friend std::ostream &operator<<(std::ostream & os, const DataFrequency & d);
+        friend bool operator==(const DataFrequency freq1, DataFrequency freq2){
+            return (freq1.frequencyVector == freq2.frequencyVector) && (freq1.acummulatedFrequency==freq2.acummulatedFrequency) && (freq1.nOfBytes == freq2.nOfBytes);
+        }
 
     private:
         void setAcummulatedFrequency();

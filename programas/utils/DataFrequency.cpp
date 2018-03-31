@@ -86,14 +86,15 @@ std::ostream &operator<<(std::ostream & os, const DataFrequency & d){
         if(elem != 0)
             m++;
     }
-    os << m;
+    os << m <<' ';
     int n;
     n = d.frequencyVector.size();
-    utils::byte  i = 0;
-    do{
-        os << i << d.frequencyVector[i]<<std::endl;
-        i++;
-    } while(i != n-1);
+    int i = 0;
+    for(int i = 0; i < n; i++){
+        if(d.frequencyVector[i] != 0)
+            os << (utils::byte )i << ' ' << d.frequencyVector[i] << ' ';
+    }
+    return os;
 }
 }
 
