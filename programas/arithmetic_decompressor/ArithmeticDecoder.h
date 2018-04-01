@@ -7,8 +7,10 @@
 
 #include <iostream>
 #include <sstream>
+#include <programas/utils/FileWriter.h>
 #include "utils/DataFrequency.h"
 #include "utils/MessageHeader.h"
+#include "utils/FileWriter.h"
 
 namespace arithmetic_decompressor{
 class ArithmeticDecoder {
@@ -19,24 +21,26 @@ public:
 
 private:
     std::stringstream decodedMessage;
-    int readBits(std::istream & is, int n);
+    long long readBits(std::istream & is, long long n);
     void initializeValues(const utils::MessageHeader & messageSize);
     void updateLimits(utils::byte x, const utils::DataFrequency & freq);
     bool readFromBuffer(std::istream & is);
     bool haveSameMSB();
-    bool getMSB(int v);
+    bool getMSB(unsigned long long v);
     bool hasE3Cond();
 
-    void complementMSB(int & i);
+    void complementMSB(unsigned long long & i);
+    void limitValue(unsigned long long & i);
     void shiftL(bool withComplement);
     void shiftU(bool withComplement);
     void shiftT(std::istream & is, bool withComplement);
-    int m, l, u, t;
-    int msb;
-    int currentNumber;
+    unsigned long long m, l, u, t;
+    long long msb;
+    long long currentNumber;
     utils::byte buffer;
     bool canRead;
-    int bufferBitsRead;
+    long long bufferBitsRead;
+    utils::FileWriter writer;
 };
 }
 

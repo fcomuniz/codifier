@@ -11,6 +11,7 @@
 #include "utils/MessageHeader.h"
 #include <sstream>
 #include <vector>
+#include <programas/utils/FileWriter.h>
 
 namespace arithmetic_compressor{
 class ArithmeticEncoder {
@@ -24,17 +25,18 @@ private:
     void sendInBuffer(std::ostream & os, bool bit);
     void sendIncompleteBuffer(std::ostream & os);
     void updateLimits(utils::byte currentByte, const utils::DataFrequency & freq);
-    bool haveSameMSB(int l, int u);
-    bool hasE3Condition(int l, int u);
-    bool getMostSignificantBit(int v);
+    bool haveSameMSB(long long l, long long u);
+    bool hasE3Condition(long long l, long long u);
+    bool getMostSignificantBit(long long v);
     void shiftU(bool withFlip);
     void shiftL(bool withFlip);
     std::stringstream encodedMessage;
     utils::MessageHeader messageSize;
+    utils::FileWriter writer;
     utils::byte buffer;
-    int bufferSize;
-    int l, u, m;
-    int msb;
+    long long bufferSize;
+    long long l, u, m;
+    long long msb;
 
 };
 }

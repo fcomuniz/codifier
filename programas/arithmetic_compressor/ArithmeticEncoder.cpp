@@ -4,6 +4,7 @@
 
 #include "ArithmeticEncoder.h"
 #include <cmath>
+#include <bitset>
 #include "structures/MyBitManipulation.h"
 namespace arithmetic_compressor{
 
@@ -27,8 +28,10 @@ std::string ArithmeticEncoder::getEncodedMessage() {
 void ArithmeticEncoder::encodeAndSend(std::istream &is, std::ostream &os, const utils::DataFrequency &freq) {
     initilizeValues(freq);
     utils::byte symbol;
-   int scale3 =0;
-    while(is>>symbol){
+   long long scale3 =0;
+    long long nOfSymbols = 0;
+    while(writer.readFromFile(is,symbol)){
+        nOfSymbols++;
         updateLimits(symbol,freq);
         while(haveSameMSB(l,u) || hasE3Condition(l,u)){
             if(haveSameMSB(l,u)){
@@ -48,15 +51,15 @@ void ArithmeticEncoder::encodeAndSend(std::istream &is, std::ostream &os, const 
             }
         }
     }
-    for(int i = 1; i <= m; i++){
+    for(long long i = 1; i <= m; i++){
         sendInBuffer(os,getBit(l,m-i));
         if(scale3){
             sendInBuffer(os,true);
             scale3--;
         }
     }
-    while(bufferSize < 0){
-
+    while(bufferSize != 0){
+        sendInBuffer(os,false);
     }
 }
 
@@ -74,7 +77,7 @@ void ArithmeticEncoder::sendInBuffer(std::ostream &os, bool bit) {
     buffer = buffer<<1 | bit;
     bufferSize++;
     if(bufferSize == 8){
-        os << buffer;
+        writer.writeToFile(os,buffer);
         buffer=0;
         bufferSize=0;
     }
@@ -87,9 +90,9 @@ void ArithmeticEncoder::sendIncompleteBuffer(std::ostream &os) {
 }
 
 void ArithmeticEncoder::updateLimits(utils::byte symbol, const utils::DataFrequency & freq){
-	int prevL = l;
-	int prevU = u;
-    int acuCountBefore = 0;
+	long long prevL = l;
+	long long prevU = u;
+    long long acuCountBefore = 0;
     if(symbol !=0){
         acuCountBefore = freq.getAcummulatedFrequency()[symbol-1];
     }
@@ -97,15 +100,15 @@ void ArithmeticEncoder::updateLimits(utils::byte symbol, const utils::DataFreque
     u = prevL + ((prevU-prevL+1)*freq.getAcummulatedFrequency()[symbol])/freq.getNOfBytes() -1;
 }
 
-bool ArithmeticEncoder::haveSameMSB(int l, int u) {
+bool ArithmeticEncoder::haveSameMSB(long long l, long long u) {
     return getMostSignificantBit(l) == getMostSignificantBit(u);
 }
 
-bool ArithmeticEncoder::getMostSignificantBit(int v) {
+bool ArithmeticEncoder::getMostSignificantBit(long long v) {
     return getBit(v,msb);
 }
 
-bool ArithmeticEncoder::hasE3Condition(int l, int u) {
+bool ArithmeticEncoder::hasE3Condition(long long l, long long u) {
     return getBit(l,msb-1) == true && getBit(u,msb-1) == false;
 }
 

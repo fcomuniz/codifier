@@ -3,6 +3,7 @@
 //
 
 #include "MessageHeader.h"
+#include "FileWriter.h"
 #include <math.h>
 
 namespace utils{
@@ -20,12 +21,15 @@ MessageHeader::MessageHeader() : messageSize(-1), messageBytesSize(-1){
 
 }
 std::ostream & operator<<(std::ostream & os, const MessageHeader & messageSize){
-    os << messageSize.messageSize << " " << messageSize.messageBytesSize <<" ";
+    utils::FileWriter writer;
+    writer.writeToFile(os,messageSize.messageSize);
+    writer.writeToFile(os,messageSize.messageBytesSize);
     return os;
 }
 std::istream & operator>>(std::istream & is, MessageHeader & messageSize){
-    is >> messageSize.messageSize >> messageSize.messageBytesSize;
-    is.seekg(1,std::ios_base::cur);
+    utils::FileWriter writer;
+    writer.readFromFile(is,messageSize.messageSize);
+    writer.readFromFile(is,messageSize.messageBytesSize);
     return is;
 }
 

@@ -13,8 +13,8 @@ int main(int argc, char ** argv){
         return 1;
     }
 
-    std::ifstream inputFile(argv[1]);
-    std::ofstream of(argv[2]);
+    std::ifstream inputFile(argv[1], std::ios_base::binary);
+    std::ofstream of(argv[2],std::ios_base::binary);
     utils::DataFrequency freq;
     utils::MessageHeader header;
     inputFile >> freq >> header;

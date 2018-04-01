@@ -7,9 +7,9 @@
 #include "ArithmeticDecoder.h"
 
 namespace arithmetic_decompressor{
-int arithmetic_decompressor::ArithmeticDecoder::readBits(std::istream & is, int n) {
-    int retNumber = 0;
-    for(int i = 0; i < n; i++){
+long long arithmetic_decompressor::ArithmeticDecoder::readBits(std::istream & is, long long n) {
+    long long retNumber = 0;
+    for(long long i = 0; i < n; i++){
         retNumber = retNumber<<1 | readFromBuffer(is);
     }
     return retNumber;
@@ -17,11 +17,10 @@ int arithmetic_decompressor::ArithmeticDecoder::readBits(std::istream & is, int 
 
 bool ArithmeticDecoder::readFromBuffer(std::istream &is) {
     if(bufferBitsRead == 8){
-        buffer = is.get();
+        canRead = writer.readFromFile(is,buffer);
         bufferBitsRead = 0;
-        canRead = !is.eof();
     }
-    bool retBit = (buffer >> (8-bufferBitsRead-1)) & 1;
+    bool retBit = ((buffer >> (8-bufferBitsRead-1)) & 1) == 1;
     bufferBitsRead++;
     return retBit;
 }
@@ -30,13 +29,12 @@ void
 ArithmeticDecoder::decodeFromStreamToOutputStream(std::istream &is, std::ostream &os, const utils::DataFrequency &freq,
                                                   const utils::MessageHeader &messageSize) {
     initializeValues(messageSize);
-    int readBytes = 0;
+    long long readBytes = 0;
     t = readBits(is,m);
     while(canRead && readBytes <messageSize.getMessageSize()){
-        std::cout << std::bitset<32>(t) << " " << t << std::endl;
         utils::byte k = 0;
         while(((t-l+1)*freq.getNOfBytes() -1 )/(u-l+1) >= freq.getAcummulatedFrequency()[k])k++;
-        os << k;
+        writer.writeToFile(os,k);
         readBytes++;
         updateLimits(k,freq);
         while(haveSameMSB() || hasE3Cond()){
@@ -65,9 +63,9 @@ void ArithmeticDecoder::initializeValues(const utils::MessageHeader &messageSize
 }
 
 void ArithmeticDecoder::updateLimits(utils::byte x, const utils::DataFrequency & freq) {
-    int prevL = l;
-    int prevU = u;
-    int cumVal = 0;
+    long long prevL = l;
+    long long prevU = u;
+    long long cumVal = 0;
     if(x != 0)
         cumVal = freq.getAcummulatedFrequency()[x-1];
     l = prevL + ((prevU-prevL+1)*cumVal)/freq.getNOfBytes();
@@ -78,32 +76,32 @@ bool ArithmeticDecoder::haveSameMSB() {
     return getMSB(l) == getMSB(u);
 }
 
-bool ArithmeticDecoder::getMSB(int l) {
+bool ArithmeticDecoder::getMSB(unsigned long long l) {
     return getBit(l,msb);
 }
 
 void ArithmeticDecoder::shiftL(bool withComplement) {
-    l <<=1;
-    l = clearBit(l,msb+1);
+    l = l << 1;
     if(withComplement)
         complementMSB(l);
+    limitValue(l);
 }
 
 void ArithmeticDecoder::shiftU(bool withComplement) {
     u = (u<<1) | 1;
-    u = clearBit(u,msb+1);
     if(withComplement)
         complementMSB(u);
+    limitValue(u);
 }
 
 void ArithmeticDecoder::shiftT(std::istream & is, bool withComplement) {
     t = t<<1 | readBits(is,1);
-    t = clearBit(t,msb+1);
     if(withComplement)
         complementMSB(t);
+    limitValue(t);
 }
 
-void ArithmeticDecoder::complementMSB(int & i) {
+void ArithmeticDecoder::complementMSB(unsigned long long & i) {
     i = flipBit(i,msb);
 }
 
@@ -119,6 +117,12 @@ void ArithmeticDecoder::decodeFromStream(std::istream &is, const utils::DataFreq
 
 std::string ArithmeticDecoder::getDecodedMessage() {
     return decodedMessage.str();
+}
+
+void ArithmeticDecoder::limitValue(unsigned long long & i) {
+   if(i >= (1 << (m))){
+        i = (i%((1)<<(m)));
+   }
 }
 
 }

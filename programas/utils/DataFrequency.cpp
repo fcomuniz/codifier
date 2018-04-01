@@ -3,6 +3,7 @@
 //
 
 #include "DataFrequency.h"
+#include "FileWriter.h"
 
 namespace utils{
 
@@ -14,11 +15,10 @@ namespace utils{
 
     void DataFrequency::setFrequencyVector(std::istream &is) {
         utils::byte currentByte;
-        while(is >> currentByte){
-            if(currentByte != ' '){
-                frequencyVector[currentByte]++;
-                nOfBytes++;
-            }
+        utils::FileWriter writer;
+        while(writer.readFromFile(is,currentByte)){
+            frequencyVector[currentByte]++;
+            nOfBytes++;
         }
         setAcummulatedFrequency();
     }
@@ -68,18 +68,18 @@ void DataFrequency::setFrequencyVector(const std::vector<unsigned int> & freq) {
     setAcummulatedFrequency();
 }
 std::istream &operator>>(std::istream & is, DataFrequency & d){
+    utils::FileWriter writer;
     int m;
-    is >> m;
+    writer.readFromFile(is,m);
     d.reset();
     while(m--){
         utils::byte currentByte;
-        is >> currentByte;
+        writer.readFromFile(is,currentByte);
         int nOfThisByte;
-        is >> nOfThisByte;
+        writer.readFromFile(is,nOfThisByte);
         d.frequencyVector[currentByte] = nOfThisByte;
         d.nOfBytes += nOfThisByte;
     }
-    is.seekg(1,std::ios_base::cur);
     d.setAcummulatedFrequency();
     return is;
 }
@@ -89,13 +89,16 @@ std::ostream &operator<<(std::ostream & os, const DataFrequency & d){
         if(elem != 0)
             m++;
     }
-    os << m <<' ';
+    utils::FileWriter writer;
+    writer.writeToFile(os,m);
     int n;
     n = d.frequencyVector.size();
     int i = 0;
     for(int i = 0; i < n; i++){
-        if(d.frequencyVector[i] != 0)
-            os << (utils::byte )i << ' ' << d.frequencyVector[i] << ' ';
+        if(d.frequencyVector[i] != 0){
+            writer.writeToFile(os,((utils::byte) i));
+            writer.writeToFile(os,d.frequencyVector[i]);
+        }
     }
     return os;
 }

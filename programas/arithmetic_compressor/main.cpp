@@ -10,8 +10,8 @@ int main(int argc, char ** argv){
     if(argc < 3){
         return 1;
     }
-    std::ifstream f(argv[1]);
-    std::ofstream of(argv[2]);
+    std::ifstream f(argv[1], std::ios_base::binary);
+    std::ofstream of(argv[2], std::ios_base::binary);
     utils::DataFrequency freq;
     freq.setFrequencyVector(f);
     utils::MessageHeader header;
@@ -20,14 +20,6 @@ int main(int argc, char ** argv){
     f.clear();
     f.seekg(0,std::ios_base::beg);
     ArithmeticEncoder encoder;
-    encoder.encode(f,freq);
-    std::stringstream ss(encoder.getEncodedMessage());
-    utils::byte b = ss.get();
-    while(!ss.eof()){
-        std::cout << std::bitset<8>(b) << " ";
-        b = ss.get();
-    }
-    of << encoder.getEncodedMessage();
-    std::cout << std::endl;
+    encoder.encodeAndSend(f,of,freq);
     return 0;
 }
