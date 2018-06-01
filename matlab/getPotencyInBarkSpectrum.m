@@ -1,7 +1,7 @@
 function potency = getPotencyInBarkSpectrum(sampleData)
     %% defining initial variables for spectrum calculation
     potency = zeros(getSizeOfBarkSpectrum(),1);
-    fourierTransform = sampleData.sample;
+    fourierTransform = sampleData.fourierTransform;
     sampleFreq = sampleData.samplingFrequency;
     
     %% Calculating the signal potency in the bark spectrum
